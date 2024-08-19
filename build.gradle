@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm'
+    id 'idea'
+    id 'eclipse'
+}
+
+ext {
+    slf4jVersion = '2.0.16'
+}
+
+group = 'net.fallingrock.zoomlaunch'
+version = '0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion)
+    implementation(group: 'org.slf4j', name: 'slf4j-simple', version: slf4jVersion)
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": "net.fallingrock.zoomlaunch.ZoomLauncherK",
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+kotlin {
+    jvmToolchain(8)
+}
