@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.JOptionPane;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,6 +21,11 @@ public class ZoomLauncherJ {
     private void execute() {
         log.atInfo().log("Starting Zoom Launcher");
 
+        if (!isOsValid()) {
+            log.atError().log("Os not supported");
+            System.exit(1);
+        }
+
         Matcher matcher = getValidZoomUrl();
 
         if (matcher != null) {
@@ -30,6 +37,12 @@ public class ZoomLauncherJ {
 
             launchZoomMeeting(zoomUri);
         }
+    }
+
+    private boolean isOsValid() {
+        String os = System.getProperty("os.name");
+
+        return os.toLowerCase().contains("linux");
     }
 
     private Matcher getValidZoomUrl() {
@@ -56,7 +69,7 @@ public class ZoomLauncherJ {
     }
 
     private void launchZoomMeeting(String zoomUri) {
-        final String cmd = String.format("xdg-open %s", zoomUri);
+        final List<String> cmd = Arrays.asList("xdg-open", zoomUri);
 
         try {
             log.atInfo().log("Executing command: {}", cmd);

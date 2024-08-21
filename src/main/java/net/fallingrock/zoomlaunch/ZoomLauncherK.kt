@@ -3,13 +3,20 @@ package net.fallingrock.zoomlaunch
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.util.Locale
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.swing.JOptionPane
+import kotlin.system.exitProcess
 
 class ZoomLauncherK {
     private fun execute() {
         log.atInfo().log("Starting Zoom Launcher")
+
+        if (!isOsValid()) {
+            log.atError().log("Os not supported")
+            exitProcess(1)
+        }
 
         val matcher = validZoomUrl ?: run {
             log.atWarn().log("No valid Zoom URL found. Exiting.")
@@ -22,6 +29,12 @@ class ZoomLauncherK {
         log.atInfo().log("Launching URL: $zoomUri")
 
         launchZoomMeeting(zoomUri)
+    }
+
+    private fun isOsValid(): Boolean {
+        val os = System.getProperty("os.name")
+
+        return os.lowercase(Locale.getDefault()).contains("linux")
     }
 
     private val validZoomUrl: Matcher?
@@ -50,7 +63,7 @@ class ZoomLauncherK {
         }
 
     private fun launchZoomMeeting(zoomUri: String) {
-        val cmd = listOf("xdg-open", zoomUri) // "xdg-open $zoomUri"
+        val cmd = listOf("xdg-open", zoomUri)
 
         try {
             log.atInfo().log("Executing command: $cmd")
