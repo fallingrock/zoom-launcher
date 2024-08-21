@@ -35,6 +35,15 @@ jar {
     }
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
+
+jar.doLast {
+    Provider<Directory> libsFilePath = layout.buildDirectory.dir("libs")
+    ConfigurableFileCollection libFiles = files { file(libsFilePath).listFiles() }
+
+    File jarfile = libFiles.singleFile
+    jarfile.executable = true
+}
+
 kotlin {
     jvmToolchain(8)
 }
