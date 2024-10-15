@@ -90,7 +90,7 @@ class ZoomLauncherK {
         private const val WEBLINK_REGEX = "^https://(.+\\.zoom\\.us)/j/(\\d+)\\?pwd=(.+)"
         private val WEBLINK_PATTERN: Pattern = Pattern.compile(WEBLINK_REGEX)
 
-        private val RESOURCE_BUNDLE = ResourceBundle.getBundle("ZoomLauncher");
+        private val RESOURCE_BUNDLE = ResourceBundle.getBundle("ZoomLauncher")
 
         private const val ZOOM_URI_FORMAT = "zoommtg://$1/join?action=join&confno=$2&pwd=$3"
         private val log: Logger = LoggerFactory.getLogger(ZoomLauncherK::class.java)
