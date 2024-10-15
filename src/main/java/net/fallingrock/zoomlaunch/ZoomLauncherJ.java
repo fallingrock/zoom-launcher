@@ -4,9 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.JOptionPane;
+
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +20,8 @@ public class ZoomLauncherJ {
 
     private static final String ZOOM_URI_FORMAT = "zoommtg://$1/join?action=join&confno=$2&pwd=$3";
     private static final Logger log = LoggerFactory.getLogger(ZoomLauncherJ.class);
+
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle("ZoomLauncher");
 
     private void execute() {
         log.atInfo().log("Starting Zoom Launcher");
@@ -48,8 +53,8 @@ public class ZoomLauncherJ {
     private Matcher getValidZoomUrl() {
         while (true) {
             final String url = JOptionPane.showInputDialog(null,
-                    "URL",
-                    "Zoom Launcher",
+                    RESOURCE_BUNDLE.getString("url"),
+                    RESOURCE_BUNDLE.getString("zoom.launcher"),
                     JOptionPane.QUESTION_MESSAGE);
 
             if (url == null) {
@@ -63,7 +68,7 @@ public class ZoomLauncherJ {
                 return matcher;
             } else {
                 log.atWarn().log("Invalid URL: {}", url);
-                showErrorDialog("Invalid URL: " + url);
+                showErrorDialog(MessageFormat.format(RESOURCE_BUNDLE.getString("invalid.url"), url));
             }
         }
     }
@@ -77,14 +82,14 @@ public class ZoomLauncherJ {
             pb.start();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            showErrorDialog("Error launching Zoom: " + e.getMessage());
+            showErrorDialog(e.getMessage());
         }
     }
 
     private void showErrorDialog(String message) {
         JOptionPane.showMessageDialog(null,
                 message,
-                "Error launching Zoom",
+                RESOURCE_BUNDLE.getString("error.launching.zoom"),
                 JOptionPane.ERROR_MESSAGE);
     }
 

@@ -3,7 +3,9 @@ package net.fallingrock.zoomlaunch
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
+import java.text.MessageFormat
 import java.util.Locale
+import java.util.ResourceBundle
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 import javax.swing.JOptionPane
@@ -42,8 +44,8 @@ class ZoomLauncherK {
             while (true) {
                 val url = JOptionPane.showInputDialog(
                     null,
-                    "URL",
-                    "Zoom Launcher",
+                    RESOURCE_BUNDLE.getString("url"),
+                    RESOURCE_BUNDLE.getString("zoom.launcher"),
                     JOptionPane.QUESTION_MESSAGE
                 )
 
@@ -57,7 +59,7 @@ class ZoomLauncherK {
                     return matcher
                 } else {
                     log.atWarn().log("Invalid URL: $url")
-                    showErrorDialog("Invalid URL: $url")
+                    showErrorDialog(MessageFormat.format(RESOURCE_BUNDLE.getString("invalid.url"), url))
                 }
             }
         }
@@ -71,7 +73,7 @@ class ZoomLauncherK {
             pb.start()
         } catch (e: IOException) {
             log.atError().log("Error executing command $cmd", e)
-            showErrorDialog("Error launching Zoom: ${e.message}")
+            showErrorDialog(e.message!!)
         }
     }
 
@@ -79,7 +81,7 @@ class ZoomLauncherK {
         JOptionPane.showMessageDialog(
             null,
             message,
-            "Error launching Zoom",
+            RESOURCE_BUNDLE.getString("error.launching.zoom"),
             JOptionPane.ERROR_MESSAGE
         )
     }
@@ -87,6 +89,8 @@ class ZoomLauncherK {
     companion object {
         private const val WEBLINK_REGEX = "^https://(.+\\.zoom\\.us)/j/(\\d+)\\?pwd=(.+)"
         private val WEBLINK_PATTERN: Pattern = Pattern.compile(WEBLINK_REGEX)
+
+        private val RESOURCE_BUNDLE = ResourceBundle.getBundle("ZoomLauncher");
 
         private const val ZOOM_URI_FORMAT = "zoommtg://$1/join?action=join&confno=$2&pwd=$3"
         private val log: Logger = LoggerFactory.getLogger(ZoomLauncherK::class.java)
